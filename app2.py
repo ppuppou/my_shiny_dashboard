@@ -16,7 +16,7 @@ def get_image_as_base64(path):
 # 이미지 파일이 실제로 존재하는 경로를 확인해야 합니다.
 # 만약 파일이 없다면 이 부분에서 오류가 발생할 수 있습니다.
 try:
-    image_path = "project/mascot.png"
+    image_path = "mascot.png"
     image_base64 = get_image_as_base64(image_path)
     
     # CSS 스타일: 오른쪽 상단 고정, 크기 조정
@@ -81,7 +81,7 @@ def load_data():
 def load_trend_data():
     try:
         # 'crime_updown.xlsx' 파일을 로드합니다.
-        trend_df = pd.read_excel("crime_updown .xlsx")
+        trend_df = pd.read_excel("crime_updown.xlsx")
         trend_df = trend_df.rename(columns={trend_df.columns[0]: '분기'})
         return trend_df
     except FileNotFoundError as e:
