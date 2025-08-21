@@ -53,9 +53,6 @@ matplotlib==3.10.0
 matplotlib-inline
 mdit-py-plugins==0.5.0
 mdurl==0.1.2
-mkl-service==2.4.0
-mkl_fft
-mkl_random
 narwhals==2.1.2
 nbclient==0.10.2
 nbformat==5.10.4
