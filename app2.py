@@ -32,13 +32,13 @@ try:
     .easter-egg-character {{
         position: fixed;
         top: 100px;
-        right: 30px;
-        width: 100px; /* 이전보다 살짝 크게 */
-        height: 100px;
+        right: 100px;
+        width: 180px; /* 이전보다 살짝 크게 */
+        height: 180px;
         background-image: url("data:image/png;base64,{image_base64}");
         background-size: contain;
         background-repeat: no-repeat;
-        animation: spin 8s linear infinite;
+        animation: spin 3s linear infinite;
         z-index: 9999;
         opacity: 0.9;
         pointer-events: none;
