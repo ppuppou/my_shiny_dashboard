@@ -12,14 +12,13 @@ def get_image_as_base64(path):
     with open(path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode()
 
-# --- 0. 이스터에그 캐릭터 준비 (try...except 구문 제거) ---
+# --- 0. 이스터에그 캐릭터 준비 ---
 # 이미지 파일이 실제로 존재하는 경로를 확인해야 합니다.
-# 만약 파일이 없다면 이 부분에서 오류가 발생할 수 있습니다.
 try:
     image_path = "대구경찰마스코트.png"
     image_base64 = get_image_as_base64(image_path)
     
-    # CSS 스타일: 오른쪽 상단 고정, 크기 조정
+    # CSS 스타일: 오른쪽 상단 고정, 크기 조정, 애니메이션 수정
     st.markdown(f"""
     <style>
     /* 회전 애니메이션 정의 */
@@ -28,20 +27,30 @@ try:
         to {{ transform: rotate(360deg); }}
     }}
 
+    /* 투명도를 70%로 바꾸는 애니메이션 정의 */
+    @keyframes reduceOpacity {{
+        to {{ opacity: 0.7; }}
+    }}
+
     /* 캐릭터 기본 스타일 (오른쪽 상단 고정) */
     .easter-egg-character {{
         position: fixed;
-        top: 100px;
+        top: 90px;
         right: 100px;
-        width: 180px; /* 이전보다 살짝 크게 */
-        height: 180px;
+        width: 160px;
+        height: 160px;
         background-image: url("data:image/png;base64,{image_base64}");
         background-size: contain;
         background-repeat: no-repeat;
-        animation: spin 3s linear infinite;
         z-index: 9999;
-        opacity: 0.9;
-        pointer-events: none;
+        opacity: 0.9; 
+        pointer-events: none; /* 클릭 방지 */
+
+        /* - spin 애니메이션: 3초에 한 바퀴, 총 7번 반복 (총 21초)
+        - reduceOpacity 애니메이션: 1초 동안 투명도를 0.7로 변경, 21초 뒤에 시작
+        - forwards: 애니메이션이 끝나면 마지막 상태(투명도 0.7)를 유지
+        */
+        animation: spin 3s linear 7, reduceOpacity 1s ease-out 21s forwards;
     }}
     </style>
     """, unsafe_allow_html=True)
