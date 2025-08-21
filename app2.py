@@ -12,49 +12,59 @@ def get_image_as_base64(path):
     with open(path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode()
 
-# --- 0. 이스터에그 캐릭터 준비 ---
+# --- 0. 이스터에그 캐릭터 준비 (try...except 구문 제거) ---
+# 이미지 파일이 실제로 존재하는 경로를 확인해야 합니다.
+# 만약 파일이 없다면 이 부분에서 오류가 발생할 수 있습니다.
 try:
-    # [수정됨] 경로 앞에 'project/' 추가
-    image_path = "project/mascot.png" 
+    image_path = "project/mascot.png"
     image_base64 = get_image_as_base64(image_path)
     
-    # CSS 스타일 (변경 없음)
+    # CSS 스타일: 오른쪽 상단 고정, 크기 조정
     st.markdown(f"""
     <style>
+    /* 회전 애니메이션 정의 */
     @keyframes spin {{
         from {{ transform: rotate(0deg); }}
         to {{ transform: rotate(360deg); }}
     }}
+
+    /* 캐릭터 기본 스타일 (오른쪽 상단 고정) */
     .easter-egg-character {{
-        position: fixed; top: 100px; right: 30px;
-        width: 100px; height: 100px;
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        width: 100px; /* 이전보다 살짝 크게 */
+        height: 100px;
         background-image: url("data:image/png;base64,{image_base64}");
-        background-size: contain; background-repeat: no-repeat;
-        animation: spin 8s linear infinite; z-index: 9999;
-        opacity: 0.9; pointer-events: none;
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: spin 8s linear infinite;
+        z-index: 9999;
+        opacity: 0.9;
+        pointer-events: none;
     }}
     </style>
     """, unsafe_allow_html=True)
     st.markdown('<div class="easter-egg-character"></div>', unsafe_allow_html=True)
 
 except FileNotFoundError:
-    st.warning("경찰 마스코트 이미지 파일('project/mascot.png')을 찾을 수 없습니다.")
+    st.warning("경찰 마스코트 이미지 파일('mascot.png')을 찾을 수 없습니다.")
 
 
 # --- 1. 페이지 설정 및 데이터 로딩 ---
+
 st.set_page_config(layout="wide", page_title="대구 범죄 분석 대시보드")
 
 # --- 1.1. 지도 및 범죄 데이터 로딩 ---
 @st.cache_data
 def load_data():
+    # CSV와 GeoJSON 파일을 로드합니다.
     try:
-        # [수정됨] 경로 앞에 'project/' 추가
-        crime_data = pd.read_csv("project/daegu_crime_data.csv").fillna(0)
+        crime_data = pd.read_csv("daegu_crime_data.csv").fillna(0)
         crime_data = crime_data[crime_data['행정동'] != '소계']
-        
-        # [수정됨] 경로 앞에 'project/' 추가
-        daegu_map = gpd.read_file("project/daegu_map.geojson")
+        daegu_map = gpd.read_file("daegu_map.geojson")
 
+        # GeoDataFrame과 범죄 데이터를 병합합니다.
         if 'adm_nm' in daegu_map.columns:
             daegu_map['행정동_키'] = daegu_map['adm_nm'].str.split().str[-1]
             merged_data = daegu_map.merge(crime_data, left_on='행정동_키', right_on='행정동', how='inner')
@@ -63,49 +73,24 @@ def load_data():
             st.error("지도 데이터에서 'adm_nm' 컬럼을 찾을 수 없습니다.")
             return None
     except FileNotFoundError as e:
-        st.error(f"데이터 파일 로딩 오류: {e}. 'project/daegu_crime_data.csv' 또는 'project/daegu_map.geojson' 파일이 있는지 확인해주세요.")
+        st.error(f"데이터 파일 로딩 오류: {e}. 'daegu_crime_data.csv' 또는 'daegu_map.geojson' 파일이 있는지 확인해주세요.")
         return None
 
 # --- 1.2. 범죄율 증감 데이터 로딩 ---
 @st.cache_data
 def load_trend_data():
     try:
-        # [수정됨] 경로 앞에 'project/' 추가 및 파일명 오타 수정 ('crime_updown .xlsx' -> 'crime_updown.xlsx')
-        trend_df = pd.read_excel("project/crime_updown.xlsx") 
+        # 'crime_updown.xlsx' 파일을 로드합니다.
+        trend_df = pd.read_excel("crime_updown .xlsx")
         trend_df = trend_df.rename(columns={trend_df.columns[0]: '분기'})
         return trend_df
     except FileNotFoundError as e:
-        st.error(f"데이터 파일 로딩 오류: {e}. 'project/crime_updown.xlsx' 파일이 있는지 확인해주세요.")
+        st.error(f"데이터 파일 로딩 오류: {e}. 'crime_updown.xlsx' 파일이 있는지 확인해주세요.")
         return None
 
-# --- 1.3. 상관관계 데이터 로딩 ---
-@st.cache_data
-def load_correlation_data():
-    try:
-        # [수정됨] 경로 앞에 'project/' 추가
-        df = pd.read_csv("project/sanggwan.csv", encoding='utf-8')
-        
-        crime_df = df.iloc[:, [0, 1]].dropna().rename(columns={"지역": "지역", "범죄발생수": "범죄발생수"})
-        pop_df = df.iloc[:, [3, 4]].dropna().rename(columns={"지역.1": "지역", "인구수": "인구수"})
-        
-        crime_df['범죄발생수'] = pd.to_numeric(crime_df['범죄발생수'])
-        pop_df['인구수'] = pd.to_numeric(pop_df['인구수'])
 
-        merged_df = pd.merge(crime_df, pop_df, on="지역")
-        
-        merged_df['범죄발생수 순위'] = merged_df['범죄발생수'].rank(method='min', ascending=False).astype(int)
-        merged_df['인구수 순위'] = merged_df['인구수'].rank(method='min', ascending=False).astype(int)
-        
-        return merged_df
-    except FileNotFoundError:
-        st.error("'project/sanggwan.csv' 파일을 찾을 수 없습니다.")
-        return pd.DataFrame()
-
-# 데이터 로드 실행
 gdf = load_data()
 trend_df = load_trend_data()
-corr_df = load_correlation_data()
-
 
 
 # --- 2. 변수 설정 ---
@@ -773,7 +758,7 @@ with tab_corr:
     def load_correlation_data():
         try:
             # CSV 파일 로드
-            df = pd.read_csv("sanggwan.csv", encoding='utf-8')
+            df = pd.read_csv("상관관계.csv", encoding='utf-8')
             
             # 데이터 분리 및 병합
             crime_df = df.iloc[:, [0, 1]].dropna().rename(columns={"지역": "지역", "범죄발생수": "범죄발생수"})
@@ -792,7 +777,7 @@ with tab_corr:
             
             return merged_df
         except FileNotFoundError:
-            st.error("'sanggwan.csv' 파일을 찾을 수 없습니다.")
+            st.error("'상관관계.csv' 파일을 찾을 수 없습니다.")
             return pd.DataFrame() # Return empty dataframe on error
 
 
