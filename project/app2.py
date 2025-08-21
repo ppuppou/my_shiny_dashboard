@@ -16,7 +16,7 @@ def get_image_as_base64(path):
 # 이미지 파일이 실제로 존재하는 경로를 확인해야 합니다.
 # 만약 파일이 없다면 이 부분에서 오류가 발생할 수 있습니다.
 try:
-    image_path = "대구경찰마스코트.png"
+    image_path = "mascot.png"
     image_base64 = get_image_as_base64(image_path)
     
     # CSS 스타일: 오른쪽 상단 고정, 크기 조정
@@ -48,7 +48,7 @@ try:
     st.markdown('<div class="easter-egg-character"></div>', unsafe_allow_html=True)
 
 except FileNotFoundError:
-    st.warning("경찰 마스코트 이미지 파일('대구경찰마스코트.png')을 찾을 수 없습니다.")
+    st.warning("경찰 마스코트 이미지 파일('mascot.png')을 찾을 수 없습니다.")
 
 
 # --- 1. 페이지 설정 및 데이터 로딩 ---
@@ -80,12 +80,12 @@ def load_data():
 @st.cache_data
 def load_trend_data():
     try:
-        # '범죄율 증감.xlsx' 파일을 로드합니다.
-        trend_df = pd.read_excel("범죄율 증감.xlsx")
+        # 'crime_updown.xlsx' 파일을 로드합니다.
+        trend_df = pd.read_excel("crime_updown .xlsx")
         trend_df = trend_df.rename(columns={trend_df.columns[0]: '분기'})
         return trend_df
     except FileNotFoundError as e:
-        st.error(f"데이터 파일 로딩 오류: {e}. '범죄율 증감.xlsx' 파일이 있는지 확인해주세요.")
+        st.error(f"데이터 파일 로딩 오류: {e}. 'crime_updown.xlsx' 파일이 있는지 확인해주세요.")
         return None
 
 
@@ -758,7 +758,7 @@ with tab_corr:
     def load_correlation_data():
         try:
             # CSV 파일 로드
-            df = pd.read_csv("인구수범죄수상관관계.csv", encoding='utf-8')
+            df = pd.read_csv("sanggwan.csv", encoding='utf-8')
             
             # 데이터 분리 및 병합
             crime_df = df.iloc[:, [0, 1]].dropna().rename(columns={"지역": "지역", "범죄발생수": "범죄발생수"})
@@ -777,7 +777,7 @@ with tab_corr:
             
             return merged_df
         except FileNotFoundError:
-            st.error("'인구수범죄수상관관계.csv' 파일을 찾을 수 없습니다.")
+            st.error("'sanggwan.csv' 파일을 찾을 수 없습니다.")
             return pd.DataFrame() # Return empty dataframe on error
 
 
