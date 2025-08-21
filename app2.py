@@ -690,7 +690,7 @@ if gdf is not None and not gdf.empty:
         
         st.markdown("---")
         st.success("""
-        ### 결론 :
+        ### 결론
         **적정 인구밀도** + **충분한 치안시설** 
         
         안전한 지역들은 **사람이 적당히 살면서 안전시설이 충분한** 이상적인 주거환경을 보입니다.
