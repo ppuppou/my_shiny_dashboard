@@ -16,7 +16,7 @@ def get_image_as_base64(path):
 # 이미지 파일이 실제로 존재하는 경로를 확인해야 합니다.
 # 만약 파일이 없다면 이 부분에서 오류가 발생할 수 있습니다.
 try:
-    image_path = "mascot.png"
+    image_path = "대구경찰마스코트.png"
     image_base64 = get_image_as_base64(image_path)
     
     # CSS 스타일: 오른쪽 상단 고정, 크기 조정
@@ -48,7 +48,7 @@ try:
     st.markdown('<div class="easter-egg-character"></div>', unsafe_allow_html=True)
 
 except FileNotFoundError:
-    st.warning("경찰 마스코트 이미지 파일('mascot.png')을 찾을 수 없습니다.")
+    st.warning("경찰 마스코트 이미지 파일('대구경찰마스코트.png')을 찾을 수 없습니다.")
 
 
 # --- 1. 페이지 설정 및 데이터 로딩 ---
@@ -80,12 +80,12 @@ def load_data():
 @st.cache_data
 def load_trend_data():
     try:
-        # 'crime_updown.xlsx' 파일을 로드합니다.
-        trend_df = pd.read_excel("crime_updown.xlsx")
+        # '범죄율 증감.xlsx' 파일을 로드합니다.
+        trend_df = pd.read_excel("범죄율 증감.xlsx")
         trend_df = trend_df.rename(columns={trend_df.columns[0]: '분기'})
         return trend_df
     except FileNotFoundError as e:
-        st.error(f"데이터 파일 로딩 오류: {e}. 'crime_updown.xlsx' 파일이 있는지 확인해주세요.")
+        st.error(f"데이터 파일 로딩 오류: {e}. '범죄율 증감.xlsx' 파일이 있는지 확인해주세요.")
         return None
 
 
@@ -477,11 +477,12 @@ if gdf is not None and not gdf.empty:
         
         st.markdown("---")
         st.success("""
-        ### 결론: 위험지역의 공통 DNA
-        **인구 과밀집** + **치안 인프라 부족** + **외국인 집중(특수)**
-        이 6곳은 모두 **사람은 많이 몰려있는데 지켜줄 시설은 없는** 전형적인 치안 사각지대의 특징을 보입니다.
-        특히, 신당동은 외국인 집중지역의 특수성을, 진천동은 극도의 인구과밀 문제를, 
-        안심1동과 월성1동은 치안공백의 심각성을 각각 보여주는 대표적 사례입니다.
+        ### 결론
+        **인구 과밀집** + **치안시설 부족** + **외국인 집중**
+        이 6곳은 모두 **사람은 많이 몰려있는데 지켜줄 시설이 부족한** 전형적인 치안 사각지대의 특징을 보입니다.
+        
+        특히 신당동의 경우, 외국인 집중지역의 특수성을, 진천동은 극도의 인구과밀 문제를, 
+        안심1동과 월성1동은 치안공백의 심각성을 각각 보여줍니다.
         """)
 
     # ========================= 탭 4: 안전지역 분석 =========================
@@ -679,10 +680,11 @@ if gdf is not None and not gdf.empty:
         
         st.markdown("---")
         st.success("""
-        ### 결론 : 안전지역의 성공 공식
-        **적정 인구밀도** + **충분한 치안인프라** 안전한 지역들은 **사람이 적당히 살면서 안전시설이 충분한** 이상적인 주거환경을 보입니다.
-        **핵심 인사이트:** 위험지역과 정반대로, 안전지역은 인구밀도가 낮으면서도 치안인프라가 풍부하고, 
-        안정적 주거지의 특성을 보입니다. 특히 평리5동의 범죄 제로 달성은 완벽한 안전지역의 모델이 될 수 있습니다.
+        ### 결론 :
+        **적정 인구밀도** + **충분한 치안시설** 안전한 지역들은 **사람이 적당히 살면서 안전시설이 충분한** 이상적인 주거환경을 보입니다.
+        
+        **핵심 인사이트:** 위험지역과 정반대로, 안전지역은 인구밀도가 낮으면서도 치안시설이 풍부하고, 
+        안정적 주거지의 특성을 보입니다. 특히 평리5동의 범죄 0건 달성은 완벽한 안전지역의 모델이 될 수 있습니다.
         """)
 
 else:
@@ -694,7 +696,7 @@ with tab_overview:
     st.markdown("""
     최근 대구광역시의 범죄 관련 데이터를 살펴보면, 몇 가지 우려스러운 동향이 나타나고 있습니다. 
     범죄 발생 건수는 전년 동분기 대비 **지속적으로 증가하는 추세**를 보이는 반면, **검거율은 하락**하고 있어 시민들의 불안감이 커질 수 있는 상황입니다. 
-    이러한 데이터 기반의 문제 인식은 범죄 취약 지역을 분석하고 선제적인 대책을 마련하는 것이 왜 중요한지를 명확히 보여줍니다.
+    이러한 데이터 기반의 문제 인식은 범죄 취약 지역을 분석하고 대안책을 마련하는 것이 왜 중요한지를 명확히 보여줍니다.
     """)
     st.markdown("---")
 
@@ -740,9 +742,9 @@ with tab_overview:
         **증가하는 범죄율과 감소하는 검거율**은 대구시의 치안 시스템에 대한 심각한 도전 과제를 제시합니다.
         이러한 상황은 단순히 경찰력 증원만으로는 해결하기 어려운 복합적인 문제입니다.
         
-        따라서, **데이터에 기반하여 범죄가 발생하기 쉬운 '취약 지역'을 과학적으로 식별**하고, 해당 지역의 특성을 면밀히 분석하여 **한정된 치안 자원을 가장 효율적으로 배분**하는 전략이 시급합니다.
+        따라서, **데이터에 기반하여 범죄가 발생하기 쉬운 '취약 지역'을 식별**하고, 해당 지역의 특성을 분석하여 **한정된 치안 자원을 가장 효율적으로 배분**하는 전략이 필요합니다.
         
-        본 대시보드는 바로 이 문제의 해결을 위해, 다양한 데이터를 종합하여 대구시의 범죄 위험도와 안전도를 다각적으로 분석하고 정책적 대안을 모색하는 것을 목표로 합니다.
+        본 대시보드는 이 문제의 해결을 위해, 다양한 데이터를 종합하여 대구시의 범죄 위험도와 안전도를 다각적으로 분석하고 정책적 대안을 모색하는 것을 목표로 합니다.
         """)
 
     else:
@@ -758,7 +760,7 @@ with tab_corr:
     def load_correlation_data():
         try:
             # CSV 파일 로드
-            df = pd.read_csv("상관관계.csv", encoding='utf-8')
+            df = pd.read_csv("인구수범죄수상관관계.csv", encoding='utf-8')
             
             # 데이터 분리 및 병합
             crime_df = df.iloc[:, [0, 1]].dropna().rename(columns={"지역": "지역", "범죄발생수": "범죄발생수"})
@@ -777,7 +779,7 @@ with tab_corr:
             
             return merged_df
         except FileNotFoundError:
-            st.error("'상관관계.csv' 파일을 찾을 수 없습니다.")
+            st.error("'인구수범죄수상관관계.csv' 파일을 찾을 수 없습니다.")
             return pd.DataFrame() # Return empty dataframe on error
 
 
@@ -825,7 +827,7 @@ with tab_corr:
                 xaxis_title="지역",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
             )
-
+            
             # Y축 제목 설정
             fig.update_yaxes(title_text="<b>인구수 (명)</b>", secondary_y=False)
             fig.update_yaxes(title_text="<b>범죄발생수 (건)</b>", secondary_y=True)
