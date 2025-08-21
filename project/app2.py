@@ -825,7 +825,7 @@ with tab_corr:
                 xaxis_title="지역",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
             )
-            
+
             # Y축 제목 설정
             fig.update_yaxes(title_text="<b>인구수 (명)</b>", secondary_y=False)
             fig.update_yaxes(title_text="<b>범죄발생수 (건)</b>", secondary_y=True)
