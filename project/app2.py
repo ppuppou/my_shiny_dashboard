@@ -107,6 +107,7 @@ trend_df = load_trend_data()
 corr_df = load_correlation_data()
 
 
+
 # --- 2. 변수 설정 ---
 
 # 위험 요인과 안전 요인으로 사용될 컬럼 목록 정의
